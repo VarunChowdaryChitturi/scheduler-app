@@ -8,20 +8,19 @@ function EventList() {
   const BASE_URL = "https://scheduler-app-yov2.onrender.com";
 
   useEffect(() => {
-      console.log("NEW BUILD LOADED 🔥");
+    console.log("NEW BUILD LOADED 🔥");
+
     axios.get(`${BASE_URL}/api/events`)
       .then(res => {
         console.log("API Response:", res.data);
 
-        // ✅ FIX: prevent crash
-        if (Array.isArray(res.data)) {
-          setEvents(res.data);
-        } else {
-          setEvents([]);
-        }
+        // 🔥 ALWAYS FORCE ARRAY (THIS IS KEY FIX)
+        const data = Array.isArray(res.data) ? res.data : [];
+
+        setEvents(data);
       })
       .catch(err => {
-        console.log(err);
+        console.log("API ERROR:", err);
         setEvents([]);
       });
   }, []);
@@ -30,11 +29,19 @@ function EventList() {
     <div style={{ padding: "20px" }}>
       <h2>Event Types</h2>
 
-      {events.length === 0 ? (
+      {/* 🔥 SAFE CHECK (NO CRASH EVER) */}
+      {!Array.isArray(events) || events.length === 0 ? (
         <p>No events available</p>
       ) : (
         events.map(event => (
-          <div key={event.id} style={{ border: "1px solid #ccc", padding: "10px", margin: "10px 0" }}>
+          <div
+            key={event.id}
+            style={{
+              border: "1px solid #ccc",
+              padding: "10px",
+              margin: "10px 0"
+            }}
+          >
             <h3>{event.title}</h3>
             <p>{event.description}</p>
 
