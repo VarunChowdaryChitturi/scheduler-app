@@ -8,6 +8,7 @@ function EventList() {
   const BASE_URL = "https://scheduler-app-yov2.onrender.com";
 
   useEffect(() => {
+      console.log("NEW BUILD LOADED 🔥");
     axios.get(`${BASE_URL}/api/events`)
       .then(res => {
         console.log("API Response:", res.data);
