@@ -1,17 +1,29 @@
 import { useState } from "react";
 import axios from "axios";
+
 function Availability() {
   const [selectedDays, setSelectedDays] = useState([]);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [timezone, setTimezone] = useState("Asia/Kolkata");
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  // 🔥 Backend URL
+  const BASE_URL = "https://scheduler-app-yov2.onrender.com";
+
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   // Handle checkbox
   const handleDayChange = (day) => {
     if (selectedDays.includes(day)) {
-      setSelectedDays(selectedDays.filter(d => d !== day));
+      setSelectedDays(selectedDays.filter((d) => d !== day));
     } else {
       setSelectedDays([...selectedDays, day]);
     }
@@ -26,11 +38,11 @@ function Availability() {
 
     try {
       for (let day of selectedDays) {
-        await axios.post("http://localhost:5000/api/availability/set", {
+        await axios.post(`${BASE_URL}/api/availability/set`, {
           day_of_week: day,
           start_time: startTime + ":00",
           end_time: endTime + ":00",
-          timezone: timezone
+          timezone: timezone,
         });
       }
 
@@ -42,15 +54,13 @@ function Availability() {
   };
 
   return (
-    
     <div style={{ padding: "20px" }}>
-        <h2>Admin - Set Availability</h2>
-      <h2>Set Availability</h2>
+      <h2>Admin - Set Availability</h2>
 
       {/* DAYS */}
       <div>
         <h4>Select Days</h4>
-        {days.map(day => (
+        {days.map((day) => (
           <label key={day} style={{ marginRight: "10px" }}>
             <input
               type="checkbox"

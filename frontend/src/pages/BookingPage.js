@@ -12,19 +12,21 @@ function BookingPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  // 🔥 Fetch slots (FULL FIXED)
+  // 🔥 Backend URL (CHANGE ONLY HERE if needed later)
+  const BASE_URL = "https://scheduler-app-yov2.onrender.com";
+
+  // 🔥 Fetch slots
   const fetchSlots = () => {
     console.log("Clicked");
     console.log("Date:", date);
 
-    // ❌ Prevent empty date
     if (!date) {
       alert("Please select a date first");
       return;
     }
 
     axios
-      .get(`http://localhost:5000/api/bookings/slots?date=${date}&eventId=${id}`)
+      .get(`${BASE_URL}/api/bookings/slots?date=${date}&eventId=${id}`)
       .then((res) => {
         console.log("Slots:", res.data);
 
@@ -41,45 +43,45 @@ function BookingPage() {
   };
 
   // 🔥 Book slot
-const bookSlot = () => {
-  if (!selectedSlot) {
-    alert("Please select a slot");
-    return;
-  }
+  const bookSlot = () => {
+    if (!selectedSlot) {
+      alert("Please select a slot");
+      return;
+    }
 
-  if (!name || !email) {
-    alert("Please enter all details");
-    return;
-  }
+    if (!name || !email) {
+      alert("Please enter all details");
+      return;
+    }
 
-  // 🔥 EMAIL VALIDATION
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!emailRegex.test(email)) {
-    alert("Please enter a valid email (example: name@gmail.com)");
-    return;
-  }
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email (example: name@gmail.com)");
+      return;
+    }
 
-  axios.post("http://localhost:5000/api/bookings/create", {
-    event_type_id: id,
-    name,
-    email,
-    booking_date: date,
-    start_time: selectedSlot.start,
-    end_time: selectedSlot.end
-  })
-  .then(() => {
-    alert("Booking confirmed");
-  })
-  .catch(err => {
-    console.log(err);
-    alert("Error booking");
-  });
-};
+    axios
+      .post(`${BASE_URL}/api/bookings/create`, {
+        event_type_id: id,
+        name,
+        email,
+        booking_date: date,
+        start_time: selectedSlot.start,
+        end_time: selectedSlot.end,
+      })
+      .then(() => {
+        alert("Booking confirmed");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Error booking");
+      });
+  };
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
-        <h2>Schedule Your Meeting</h2>
+      <h2>Schedule Your Meeting</h2>
       <h2>Book Your Slot</h2>
 
       {/* DATE INPUT */}

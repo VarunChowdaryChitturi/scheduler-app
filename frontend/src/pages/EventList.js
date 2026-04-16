@@ -7,7 +7,7 @@ function EventList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/events")
+    axios.get("https://scheduler-app-yov2.onrender.com")
       .then(res => setEvents(res.data))
       .catch(err => console.log(err));
   }, []);
